@@ -64,23 +64,32 @@ def main():
 	except vk_api.AuthError as error_msg:
 		print(error_msg)
 		return
-		
+	
+
+
+
 	vkaudio = VkAudio(vk_session)
-
 	artists = collections.Counter()
+	owner_ids_list = [ 490446883, 490389468, 490443573]
 
 
-	while True:
-		audios = vkaudio.get(owner_id=490446883)
+	for owner_id in owner_ids_list:
+		try:
+			audios = vkaudio.get(owner_id=owner_id)
+		except:
+			pass
 		if not audios:
 			print("break_was")
 			break
 
 		for audio in audios:
 			artists[audio['artist']] += 1
-			print(audio)
-			print("audio")
-		break
+			#print(audio)
+			#print("audio")
+		
+
+
+
 
 
 	# Составляем рейтинг первых 15
@@ -89,15 +98,18 @@ def main():
 	for artist, tracks in artists.most_common(15):
 		print('{} - {} tracks'.format(artist, tracks))
 
+
+
+
 	# Ищем треки самого популярного
-	most_common_artist = artists.most_common(1)[0][0]
+	# most_common_artist = artists.most_common(1)[0][0]
+	# print('\nSearch for', most_common_artist)
+	# tracks = vkaudio.search(q=most_common_artist)[:10]
+	# for n, track in enumerate(tracks, 1):
+	# 	print('{}. {} {}'.format(n, track['title'], track['url']))
 
-	print('\nSearch for', most_common_artist)
 
-	tracks = vkaudio.search(q=most_common_artist)[:10]
 
-	for n, track in enumerate(tracks, 1):
-		print('{}. {} {}'.format(n, track['title'], track['url']))
 
 
 if __name__ == '__main__':

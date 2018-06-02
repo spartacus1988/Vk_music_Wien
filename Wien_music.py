@@ -71,11 +71,7 @@ def main():
 			print(len(response['items']))
 			break
 
-		#break
-		age_from+=1
-		age_to+=1
-		if age_from > 28:
-			break
+		
 
 
 		if response['items']:
@@ -85,21 +81,44 @@ def main():
 				#print(response['items'][0])
 				try:
 					audios = vkaudio.get(owner_id=item['id'])
-					audios = audios[:10]
-					print(audios)
+					local_artists = collections.Counter()
+					for audio in audios:
+						local_artists[audio['artist']] += 1
+					local_most_common_artist = local_artists.most_common(1)[0][0]
+
+					print("local_most_common_artist " + local_most_common_artist)
+
+					artists[local_most_common_artist] += 1
+
+
+
+
+					# for word in ['red', 'blue', 'red', 'green', 'blue', 'blue']:
+					# cnt[word] += 1
+
+
+					# >>> cnt
+					# Counter({'blue': 3, 'red': 2, 'green': 1})
+
+
+					# audios = audios[:10]
+					# print(audios)
 					#print("audios")
 					#print(audios[:1])
 				except:
 					pass
 
 
-				if not audios:
-					print("break_was")
-					#break
-					pass
-				else:
-					for audio in audios:
-						artists[audio['artist']] += 1	
+				# if not audios:
+				# 	print("break_was")
+				# 	#break
+				# 	pass
+				# else:
+				# 	artists[local_most_common_artist] += 1
+
+				# 	# for audio in audios:
+				# 	# 	artists[audio['artist']] += 1
+				# 	# 	#print(artists)	
 
 
 
@@ -108,11 +127,18 @@ def main():
 
 
 		# Составляем рейтинг первых 15
-		print('\nTop 15:')
-		print(artists)
+		print('\nTop 20:')
+		#print(artists)
 		print("for users in age from 17 to " + str(age_from))
-		for artist, tracks in artists.most_common(15):		
-			print('{} - {} tracks'.format(artist, tracks))
+		for artist, tracks in artists.most_common(20):		
+			print('{} - {} peoples'.format(artist, tracks))
+
+
+		#break
+		age_from+=1
+		age_to+=1
+		if age_from > 28:
+			break
 
 
 

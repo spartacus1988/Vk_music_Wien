@@ -1,43 +1,9 @@
 
-# import vk
-
-# def extract_credentials(pathfile):
-# 	access_token = None
-# 	expires_in = None
-# 	user_id = None
-# 	with open(pathfile, 'r') as f:
-# 		for line in f:
-# 			#print(str(line))
-# 			a, b = line.strip().split(':')
-# 			#print(a)
-# 			if a == 'access_token':
-# 				#print("aaaaaaa")
-# 				access_token = b
-# 			if a == 'expires_in':
-# 				expires_in = b
-# 			if a == 'user_id':
-# 				user_id = b
-# 	#print(access_token)
-# 	if int(expires_in) > 0:
-# 		return access_token, expires_in, user_id
-# 	else:
-# 		return None, None, None
-
-
-
-
-# access_token, expires_in, user_id = extract_credentials('credentials.txt')
-
-# print("access_token_is " + str(access_token))
-# print("user_id_is " + str(user_id))
-
-
-
-
 
 import vk_api
 from vk_api.audio import VkAudio
 import collections
+import time
 
 
 
@@ -46,7 +12,6 @@ def extract_credentials(pathfile):
 	password = None
 	with open(pathfile, 'r') as f:
 		for line in f:
-			#print(str(line))
 			login, password = line.strip().split(':')
 		return login, password
 
@@ -54,7 +19,7 @@ def extract_credentials(pathfile):
 
 
 def main():
-	""" Пример отображения 5 последних альбомов пользователя """
+	
 
 	login, password = extract_credentials('credentials.txt')
 	vk_session = vk_api.VkApi(login, password)
@@ -72,9 +37,43 @@ def main():
 	artists = collections.Counter()
 
 	vk = vk_session.get_api()
-	response = vk.users.search(city = 198, count=10)  
 
-	#print(response)
+
+	#offset =0
+	age_from=17
+	age_to=17
+	len_of_response = 0
+	while True:
+		response = vk.users.search(city = 198, count=1000, age_from = age_from, age_to = age_to)  
+		time.sleep(1)
+		#offset=100
+		
+
+		if response['items']:
+			#print(response)
+
+			print("age_is " + str(age_from))
+			print("\r\n")
+
+			print("len_of_current_age_is " + str(len(response['items'])))
+			print("\r\n")
+
+
+
+			len_of_response+=len(response['items'])
+			print("summ_len_of_response_is " + str(len_of_response))
+			print("\r\n")
+
+
+		else:
+			print("breaking.......")
+			print(len(response['items']))
+			break
+
+		break
+		#age_from+=1
+		#age_to+=1
+
 
 	if response['items']:
 		for item in response['items']:
@@ -97,36 +96,15 @@ def main():
 
 
 
-	# #vkaudio = VkAudio(vk_session)
-	# #artists = collections.Counter()
-	# #owner_ids_list = [ 490446883, 490389468, 490443573]
 
-
-	# for owner_id in owner_ids_list:
-	# 	try:
-	# 		audios = vkaudio.get(owner_id=owner_id)
-	# 	except:
-	# 		pass
-
-
-	# 	if not audios:
-	# 		print("break_was")
-	# 		break
-
-	# 	for audio in audios:
-	# 		artists[audio['artist']] += 1
-	# 		#print(audio)
-	# 		#print("audio")
-		
-
-
-
+	
 
 
 	# Составляем рейтинг первых 15
 	print('\nTop 15:')
-	print(artists)
-	for artist, tracks in artists.most_common(15):
+	#print(artists)
+	print("for users in age " + str(age_from))
+	for artist, tracks in artists.most_common(15):		
 		print('{} - {} tracks'.format(artist, tracks))
 
 

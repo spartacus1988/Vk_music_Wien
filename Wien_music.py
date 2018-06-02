@@ -2,6 +2,7 @@
 
 import vk_api
 from vk_api.audio import VkAudio
+from vk_api.execute import VkFunction
 import collections
 import time
 
@@ -44,7 +45,7 @@ def main():
 	age_to=17
 	len_of_response = 0
 	while True:
-		response = vk.users.search(city = 198, count=1000, age_from = age_from, age_to = age_to)  
+		response = vk.users.search(city = 198, count=10, age_from = age_from, age_to = age_to)  
 		time.sleep(1)
 		#offset=100
 		
@@ -70,42 +71,48 @@ def main():
 			print(len(response['items']))
 			break
 
-		break
-		#age_from+=1
-		#age_to+=1
+		#break
+		age_from+=1
+		age_to+=1
+		if age_from > 28:
+			break
 
 
-	if response['items']:
-		for item in response['items']:
-			print(item)
-			print(item['id'])
-			#print(response['items'][0])
-			try:
-				audios = vkaudio.get(owner_id=item['id'])
-			except:
-				pass
+		if response['items']:
+			for item in response['items']:
+				print(item)
+				print(item['id'])
+				#print(response['items'][0])
+				try:
+					audios = vkaudio.get(owner_id=item['id'])
+					audios = audios[:10]
+					print(audios)
+					#print("audios")
+					#print(audios[:1])
+				except:
+					pass
 
 
-			if not audios:
-				print("break_was")
-				#break
-				pass
-			else:
-				for audio in audios:
-					artists[audio['artist']] += 1	
+				if not audios:
+					print("break_was")
+					#break
+					pass
+				else:
+					for audio in audios:
+						artists[audio['artist']] += 1	
 
 
 
 
-	
+		
 
 
-	# Составляем рейтинг первых 15
-	print('\nTop 15:')
-	#print(artists)
-	print("for users in age " + str(age_from))
-	for artist, tracks in artists.most_common(15):		
-		print('{} - {} tracks'.format(artist, tracks))
+		# Составляем рейтинг первых 15
+		print('\nTop 15:')
+		print(artists)
+		print("for users in age from 17 to " + str(age_from))
+		for artist, tracks in artists.most_common(15):		
+			print('{} - {} tracks'.format(artist, tracks))
 
 
 

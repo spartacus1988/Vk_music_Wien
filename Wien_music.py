@@ -64,28 +64,59 @@ def main():
 	except vk_api.AuthError as error_msg:
 		print(error_msg)
 		return
-	
 
 
 
 	vkaudio = VkAudio(vk_session)
+	audios = None
 	artists = collections.Counter()
-	owner_ids_list = [ 490446883, 490389468, 490443573]
+
+	vk = vk_session.get_api()
+	response = vk.users.search(city = 198, count=10)  
+
+	#print(response)
+
+	if response['items']:
+		for item in response['items']:
+			print(item)
+			print(item['id'])
+			#print(response['items'][0])
+			try:
+				audios = vkaudio.get(owner_id=item['id'])
+			except:
+				pass
 
 
-	for owner_id in owner_ids_list:
-		try:
-			audios = vkaudio.get(owner_id=owner_id)
-		except:
-			pass
-		if not audios:
-			print("break_was")
-			break
+			if not audios:
+				print("break_was")
+				#break
+				pass
+			else:
+				for audio in audios:
+					artists[audio['artist']] += 1	
 
-		for audio in audios:
-			artists[audio['artist']] += 1
-			#print(audio)
-			#print("audio")
+
+
+	# #vkaudio = VkAudio(vk_session)
+	# #artists = collections.Counter()
+	# #owner_ids_list = [ 490446883, 490389468, 490443573]
+
+
+	# for owner_id in owner_ids_list:
+	# 	try:
+	# 		audios = vkaudio.get(owner_id=owner_id)
+	# 	except:
+	# 		pass
+
+
+	# 	if not audios:
+	# 		print("break_was")
+	# 		break
+
+	# 	for audio in audios:
+	# 		artists[audio['artist']] += 1
+	# 		#print(audio)
+	# 		#print("audio")
 		
 
 

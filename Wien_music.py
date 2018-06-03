@@ -45,7 +45,7 @@ def main():
 	age_to=17
 	len_of_response = 0
 	while True:
-		response = vk.users.search(city = 198, count=10, age_from = age_from, age_to = age_to)  
+		response = vk.users.search(city = 198, count=1000, age_from = age_from, age_to = age_to)  
 		time.sleep(1)
 		#offset=100
 		
@@ -137,7 +137,7 @@ def main():
 		#break
 		age_from+=1
 		age_to+=1
-		if age_from > 28:
+		if age_from > 35:
 			break
 
 
